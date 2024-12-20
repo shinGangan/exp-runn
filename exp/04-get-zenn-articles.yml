@@ -1,0 +1,22 @@
+desc: Zennの記事を取得する
+vars:
+  user_name: gangannikki
+  count: 3
+  order: latest
+runners:
+  req:
+    endpoint: https://zenn.dev
+steps:
+  get_articles:
+    desc: ガンガンの記事を取得する(正常系)
+    req:
+      /api/articles?count={{ vars.count }}&username={{ vars.user_name }}&latest={{ vars.latest }}:
+        get:
+          body:
+            application/json: null
+    test: |
+      current.res.status == 200
+    dump:
+      current.res.body.articles
+  test_articles_number:
+    test: len(steps.get_articles.res.body.articles) == vars.count
